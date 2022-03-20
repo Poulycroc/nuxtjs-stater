@@ -1,11 +1,13 @@
 export default {
-  // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
 
-  // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
 
-  // Global page headers: https://go.nuxtjs.dev/config-head
+  env: {
+    BASE_API: process.env.BASE_API || 'http://localhost:9999/api/',
+    LANG: process.env.LANG || 'en',
+  },
+
   head: {
     title: 'nuxtjs-starter',
     meta: [
@@ -17,44 +19,65 @@ export default {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
 
-  // Global CSS: https://go.nuxtjs.dev/config-css
-  css: [],
+  router: {
+    middleware: ['auth'],
+  },
 
-  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  css: ['~/assets/scss/app.scss'],
 
-  // Auto import components: https://go.nuxtjs.dev/config-components
-  components: true,
+  plugins: [
+    // SERVICES
+    '~/services/bus.service',
 
-  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-  buildModules: [
-    // https://go.nuxtjs.dev/eslint
-    '@nuxtjs/eslint-module',
-    // https://go.nuxtjs.dev/tailwindcss
-    '@nuxtjs/tailwindcss',
+    // PLUGINS
+    '~/plugins/axios',
+    '~/plugins/nuxt-client-init',
   ],
+
+  components: false,
+  buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/tailwindcss'],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios',
-    // https://go.nuxtjs.dev/pwa
+    require('./initializers/nuxt-i18n'),
+    require('./initializers/axios'),
     '@nuxtjs/pwa',
+    '@nuxtjs/auth',
   ],
 
-  // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {
-    // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: '/',
-  },
-
-  // PWA module configuration: https://go.nuxtjs.dev/pwa
-  pwa: {
-    manifest: {
-      lang: 'en',
+  auth: {
+    localStorage: false,
+    cookie: {
+      prefix: 'auth.',
+      options: {
+        path: '/',
+        maxAge: 10800,
+      },
+    },
+    strategies: {
+      local: {
+        endpoints: {
+          login: {
+            url: 'v1/authorizations',
+            method: 'post',
+            propertyName: 'token',
+          },
+          user: {
+            url: 'v1/authorizations/me',
+            method: 'get',
+            propertyName: 'content',
+          },
+          logout: false,
+        },
+      },
     },
   },
 
-  // Build Configuration: https://go.nuxtjs.dev/config-build
+  pwa: {
+    manifest: {
+      lang: process.env.LANG,
+    },
+  },
+
   build: {},
 }
