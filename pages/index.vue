@@ -1,10 +1,6 @@
 <template>
   <main>
     <section>
-      <nuxt-link to="/login">login</nuxt-link>
-      <nuxt-link to="/secret">secret</nuxt-link>
-    </section>
-    <section>
       <Tutorial />
     </section>
   </main>

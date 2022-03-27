@@ -37,7 +37,6 @@ export default {
   components: false,
   buildModules: ['@nuxtjs/eslint-module', '@nuxtjs/tailwindcss'],
 
-  // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     require('./initializers/nuxt-i18n'),
     require('./initializers/axios'),
@@ -56,16 +55,26 @@ export default {
     },
     strategies: {
       local: {
+        token: {
+          property: 'token',
+          global: true,
+          required: true,
+          type: 'Bearer',
+        },
+        user: {
+          property: 'user',
+          // autoFetch: true
+        },
         endpoints: {
           login: {
             url: 'v1/authorizations',
             method: 'post',
-            propertyName: 'token',
+            propertyName: 'data.token',
           },
           user: {
             url: 'v1/authorizations/me',
             method: 'get',
-            propertyName: 'content',
+            propertyName: 'user',
           },
           logout: false,
         },

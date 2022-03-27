@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <div class="md:container md:mx-auto">
     <div
       v-if="error"
       class="flex bg-red-100 rounded-lg p-4 mb-4 text-sm text-red-700"
@@ -57,7 +57,7 @@
             Please choose a password.
           </p>
         </div>
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-end">
           <button
             class="bg-blue hover:bg-blue-dark text-white font-bold py-2 px-4 rounded"
             type="button"
@@ -65,16 +65,16 @@
           >
             Sign In
           </button>
-          <nuxt-link
+          <!-- <nuxt-link
             to="/register"
             class="inline-block align-baseline font-bold text-sm text-blue hover:text-blue-darker"
           >
             S'inscrire
-          </nuxt-link>
+          </nuxt-link> -->
         </div>
       </div>
     </form>
-  </section>
+  </div>
 </template>
 
 <script>
@@ -98,8 +98,7 @@ export default {
             password: this.password,
           },
         })
-
-        this.$router.push('/secret')
+        this.$router.push('/dashboard')
       } catch (e) {
         this.error = e?.response?.data.message
       }
